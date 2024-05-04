@@ -6,7 +6,12 @@ from core.taxa import Taxa
 class TestTaxa(unittest.TestCase):
     def setUp(self):
         self.taxa = Taxa()
-        self.mocked_response = {'taxas': [{'nome': 'SELIC', 'valor': 2.25}, {'nome': 'CDI', 'valor': 2.15}]}
+        self.mocked_response = {
+            'taxas': [
+                {'nome': 'SELIC', 'valor': 2.25},
+                {'nome': 'CDI', 'valor': 2.15}
+            ]
+        }
 
     @patch('core.taxa.requests.get')
     def test_can_get_taxa_from_api(self, mock_get):
@@ -36,6 +41,6 @@ class TestTaxa(unittest.TestCase):
             self.taxa._show_table()
             mocked_print.assert_called_once()
 
+
 if __name__ == '__main__':
     unittest.main()
-
