@@ -2,6 +2,7 @@ import sys
 import requests
 from rich.console import Console
 
+
 class Cep:
     def __init__(self, cep):
         self.cep = cep
@@ -14,19 +15,25 @@ class Cep:
         self._show_content()
 
     def _get(self):
-        try:
-            with self._console.status("[bold green]Buscando CEP...[/bold green]"):
-                r = requests.get(self._url)
-        except:
+        with self._console.status("[bold green]Buscando CEP...[/bold green]"):
+            r = requests.get(self._url)
+
+        if not r.ok:
             sys.exit(1)
+
         self._content = r.json()
-    
+
     def _show_content(self):
-        self._console.print('=' * 30, style='bold yellow')
-        self._console.print(f'[bold yellow]CEP:[/bold yellow] {self._content.get("cep")}')
-        self._console.print('=' * 30, style='bold yellow')
+        self._console.print('=' * 45, style='bold yellow')
+        self._console.print(
+            f'[bold yellow]CEP:[/bold yellow] {self._content.get("cep")}'
+        )
+        self._console.print('=' * 45, style='bold yellow')
+
         for key, value in self._content.items():
             if not value:
                 continue
-            self._console.print(f'[yellow][+][/yellow] {key.capitalize()}: [green]{value}[/green]')
 
+            self._console.print(
+                f'[yellow][+][/yellow] {key.upper()}: [green]{value}[/green]'
+            )
