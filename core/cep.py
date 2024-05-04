@@ -1,12 +1,12 @@
 import sys
 import requests
-from rich.console import Console
+from core.echo import Echo
 
 
 class Cep:
     def __init__(self, cep):
         self.cep = cep
-        self._console = Console()
+        self._echo = Echo()
         self._content = {}
         self._url = f'https://viacep.com.br/ws/{self.cep}/json/'
 
@@ -15,7 +15,7 @@ class Cep:
         self._show_content()
 
     def _get(self):
-        with self._console.status("[bold green]Buscando CEP...[/bold green]"):
+        with self._echo.status("Buscando CEP..."):
             r = requests.get(self._url)
 
         if not r.ok:
@@ -24,16 +24,10 @@ class Cep:
         self._content = r.json()
 
     def _show_content(self):
-        self._console.print('=' * 45, style='bold yellow')
-        self._console.print(
-            f'[bold yellow]CEP:[/bold yellow] {self._content.get("cep")}'
-        )
-        self._console.print('=' * 45, style='bold yellow')
+        self._echo.title(f'CEP: {self._content.get("cep")}')
 
         for key, value in self._content.items():
-            if not value:
+            if not value or key == 'cep':
                 continue
 
-            self._console.print(
-                f'[yellow][+][/yellow] {key.upper()}: [green]{value}[/green]'
-            )
+            self._echo.print(f'{key.capitalize()}: [green]{value}[/green]')
