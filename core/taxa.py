@@ -9,7 +9,7 @@ class Taxa:
 
     def __init__(self):
         self._console = Console()
-        self._table   = Table()
+        self._table = Table()
         self._content = None
 
     def show(self):
@@ -18,15 +18,16 @@ class Taxa:
         self._show_table()
 
     def _get(self):
-        try:
-            with self._console.status("[bold green]Buscando taxas...[/bold green]"):
-                r = requests.get(self._url)
-        except:
-            sys.exit(1) 
+        with self._console.status("[bold green]Buscando taxas[/bold green]"):
+            r = requests.get(self._url)
+
+        if not r.ok:
+            sys.exit(1)
+
         self._content = r.json()
-    
+
     def _build_table(self, data):
-        self._table.add_column('Taxa') 
+        self._table.add_column('Taxa')
         self._table.add_column('Valor')
         for taxa in data:
             name, value = taxa.get('nome'), taxa.get('valor')
@@ -34,4 +35,3 @@ class Taxa:
 
     def _show_table(self):
         self._console.print(self._table)
-
