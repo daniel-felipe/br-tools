@@ -2,6 +2,7 @@ from rich.console import Console
 from rich.table import Table
 import sys
 import requests
+from core.echo import Echo
 
 
 class Taxa:
@@ -9,13 +10,16 @@ class Taxa:
 
     def __init__(self):
         self._console = Console()
+        self._echo = Echo()
         self._table = Table()
         self._content = None
 
     def show(self):
         self._get()
-        self._build_table(self._content)
-        self._show_table()
+        self._echo.table(
+            ['Taxa', 'Valor'],
+            self._content
+        )
 
     def _get(self):
         with self._console.status("[bold green]Buscando taxas[/bold green]"):
@@ -25,13 +29,3 @@ class Taxa:
             sys.exit(1)
 
         self._content = r.json()
-
-    def _build_table(self, data):
-        self._table.add_column('Taxa')
-        self._table.add_column('Valor')
-        for taxa in data:
-            name, value = taxa.get('nome'), taxa.get('valor')
-            self._table.add_row(name, str(value))
-
-    def _show_table(self):
-        self._console.print(self._table)
