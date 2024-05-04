@@ -19,9 +19,14 @@ class Cep:
             r = requests.get(self._url)
 
         if not r.ok:
+            self._echo.error('Erro ao buscar CEP!')
             sys.exit(1)
 
         self._content = r.json()
+
+        if 'erro' in self._content:
+            self._echo.error('CEP não encontrado!')
+            sys.exit(1)
 
     def _show_content(self):
         self._echo.title(f'CEP: {self._content.get("cep")}')
