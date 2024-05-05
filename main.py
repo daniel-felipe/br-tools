@@ -1,5 +1,6 @@
 from core.taxa import Taxa
 from core.cep import Cep
+from core.holiday import Holiday
 import argparse
 
 
@@ -16,6 +17,12 @@ def parse_args():
         '-c',
         help='Busca informações de um CEP'
     )
+    parser.add_argument(
+        '--feriados',
+        '-f',
+        action='store_true',
+        help='Mostra o próximo feriado nacional'
+    )
     return parser.parse_args()
 
 
@@ -29,6 +36,10 @@ def main():
     if args.cep:
         cep = Cep(args.cep)
         cep.show()
+
+    if args.feriados:
+        holiday = Holiday()
+        holiday.show()
 
 
 if __name__ == '__main__':
